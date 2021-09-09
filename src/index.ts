@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { exec, spawn } from 'child_process'
+import { spawnSync } from 'child_process'
 
 const SLACK_URL = process.env.SLACK_URL || ''
 
@@ -11,24 +11,26 @@ type Payload = {
 }
 
 function slackNotify(url: string, payloasdObj: Payload) {
-  const payload = JSON.stringify(payloasdObj)
-
-  const options = {
+  return axios.request({
     method: 'POST',
     url,
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    data: { payload },
-  } as const
-
-  return axios.request(options)
+    data: { payload: JSON.stringify(payloasdObj) },
+  })
 }
 
-function mensaCheck() {
-  const htmlq = '/Users/hiro/.cargo/bin/htmlq'
-  spawn(
-    `curl $TARGET_URL | ${htmlq} --text "#exam p:nth-of-type(5)" | sed 's/^ *\| *$//'`,
-    { stdio: 'inherit', shell: true }
-  )
+const htmlq = '$HOME/.cargo/bin/htmlq'
+const curl = '/usr/bin/curl'
+const nonReadyText = '（現在未定です）'
+const mensaUrl = 'https://mensa.jp/exam/'
+
+function mensaCheck(): false | string {
+  const command = `${curl} ${mensaUrl} | ${htmlq} --text "#exam p:nth-of-type(5)"`
+  const result = spawnSync(command, { shell: true })
+  const text = result.stdout.toString().trim()
+  const noReady = text === nonReadyText
+  if (noReady) return false
+  return text
 }
 
 const mensaSlackNotify = (text: string) =>
@@ -41,8 +43,9 @@ const mensaSlackNotify = (text: string) =>
 
 async function main() {
   if (!SLACK_URL) return
-  mensaSlackNotify()
-  ;('')
+  const result = mensaCheck()
+  if (!result) return
+  mensaSlackNotify(result)
 }
 
 main()
