@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/sh
 
 source .envrc
-./node_modules/.bin/ts-node index.ts
+./node_modules/.bin/ts-node ./src/index.ts
