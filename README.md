@@ -1,3 +1,3 @@
-## Tick run scripts (Personal)
+## minutely
 
-Call every minute
+> My Trigger Call every minute
