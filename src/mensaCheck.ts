@@ -1,6 +1,5 @@
 import { spawnSync } from 'child_process'
-import { slackNotify } from './slack'
-const SLACK_URL = process.env.SLACK_URL || ''
+import { slackNotice } from './slackCli'
 
 const htmlq = '$HOME/.cargo/bin/htmlq'
 const curl = '/usr/bin/curl'
@@ -19,15 +18,9 @@ function mensaCheckReady(): false | string {
 }
 
 const mensaSlackNotify = (text: string) =>
-  slackNotify(SLACK_URL, {
-    text,
-    channel: '#notice',
-    username: 'MENSA checker',
-    icon_emoji: ':brain:',
-  })
+  slackNotice('MENSA checker', text, ':brain:')
 
 export function mensaCheck() {
-  if (!SLACK_URL) return
   const result = mensaCheckReady()
   if (!result) return
   mensaSlackNotify(result)
