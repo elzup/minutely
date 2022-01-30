@@ -1,7 +1,8 @@
 import { spawnSync } from 'child_process'
 import { slackNotice } from './slackCli'
 
-const htmlq = '$HOME/.cargo/bin/htmlq'
+const cargoBin = `$HOME/.cargo/bin`
+const htmlq = `${cargoBin}/htmlq`
 const curl = '/usr/bin/curl'
 const nonReadyText = '（現在未定です）'
 const mensaUrl = 'https://mensa.jp/exam/'

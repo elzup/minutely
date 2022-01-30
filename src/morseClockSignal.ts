@@ -1,15 +1,25 @@
 import { execSync } from 'child_process'
 import * as morse from 'morse-converter'
 
-const cargo = `$HOME/.cargo/bin/cargo`
-const morse2sound = `$HOME/.ghq/github.com/irevenko/morse2sound`
+const cargoBin = `$HOME/.cargo/bin`
+const morse2sound = `${cargoBin}/morse2sound`
 const morse2soundCmd = (sig: string) =>
-  `(cd ${morse2sound}
-    && ${cargo} run --offline --dot-duration 50 --frequency 200 "${sig}")`
+  `${morse2sound} --dot-duration 50 --frequency 200 "${sig}"`
+
+const hourSignal = () => {
+  const h = new Date().getHours()
+  // 0 => 'za',
+  // 1 => 'b',
+  // 2 => 'c',
+  // 23=> 'xy'
+  const hourCharList = ['za', ...`bcdefghijklmnopqrstuvw`.split(''), 'xy']
+
+  return `${hourCharList[h]}${h}`
+}
 
 export function morseClockSignal() {
-  const sig = morse.encode(`${new Date().getHours()}`)
-  const cmd = morse2soundCmd(sig)
+  const morseSig = morse.encode(hourSignal())
+  const cmd = morse2soundCmd(morseSig)
 
   execSync(cmd)
 }
