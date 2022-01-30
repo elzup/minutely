@@ -1,8 +1,8 @@
 import { cronMatch } from './cronMatch'
 import { mensaCheck } from './mensaCheck'
 import { morseClockSignal } from './morseClockSignal'
-import { slackNotice } from './slackCli'
 
+const dayTime = `8-21`
 async function main() {
   const now = new Date()
   // NOTE: 秒は "*"、1分に一回呼ばれることは保証されていて何秒のタイミングで呼ばれるかは不明なので
@@ -17,8 +17,8 @@ async function main() {
   //   slackNotice('weekley', 'minutely works', ':+1:')
   // }
 
-  const hourly = '* 0 * * * *'
-  if (cronMatch(hourly, now)) {
+  const dayHourly = `* 0 ${dayTime} * * *`
+  if (cronMatch(dayHourly, now)) {
     morseClockSignal()
   }
 }
