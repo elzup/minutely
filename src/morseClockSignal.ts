@@ -33,7 +33,7 @@ const HOUR_CHAR_LIST = [
 const ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
 
 export const hourSignal = (d: number, h: number) =>
-  `${ALPHABET[d % 26]} ${HOUR_CHAR_LIST[h]} ${h}`
+  `${ALPHABET[(d - 1) % 26]} ${HOUR_CHAR_LIST[h]}`
 
 const hourSignalNow = (d = new Date()) => hourSignal(d.getDate(), d.getHours())
 

@@ -1,0 +1,6 @@
+{
+  "extends": ["nzap", "nzap/typescript", "nzap/jest"],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  }
+}
