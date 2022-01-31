@@ -9,7 +9,7 @@ import { morseClockSignal } from './morseClockSignal'
 const dayTime = `8-21`
 const HOURLY = '* 0 * * * *'
 const HOURLY3 = '* 0 */3 * * *'
-const HOURLYDAY = `* 0 ${dayTime} * * *`
+const _HOURLYDAY = `* 0 ${dayTime} * * *`
 // NOTE: 秒は "*"、1分に一回呼ばれることは保証されていて何秒のタイミングで呼ばれるかは不明なので
 
 type Task = {

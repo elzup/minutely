@@ -5,7 +5,7 @@ const SLACK_URL = process.env.SLACK_URL || ''
 export const slackNotice = (
   username: string,
   text: string,
-  icon_emoji: string
+  iconEmoji: string
 ) => {
   if (!SLACK_URL) throw new Error('SLACK_URL is not defined')
 
@@ -13,6 +13,6 @@ export const slackNotice = (
     text,
     channel: '#notice',
     username,
-    icon_emoji,
+    icon_emoji: iconEmoji,
   })
 }

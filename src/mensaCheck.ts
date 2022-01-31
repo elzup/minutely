@@ -14,6 +14,7 @@ function mensaCheckReady(): false | string {
   // console.log(text)
 
   const noReady = text === nonReadyText
+
   if (noReady) return false
   return text
 }
@@ -23,6 +24,7 @@ const mensaSlackNotify = (text: string) =>
 
 export function mensaCheck() {
   const result = mensaCheckReady()
+
   if (!result) return
   mensaSlackNotify(result)
 }
