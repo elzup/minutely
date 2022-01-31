@@ -6,16 +6,17 @@ const dayTime = `8-21`
 const HOURLY = '* 0 * * * *'
 const HOURLY3 = '* 0 */3 * * *'
 const HOURLYDAY = `* 0 ${dayTime} * * *`
+// NOTE: 秒は "*"、1分に一回呼ばれることは保証されていて何秒のタイミングで呼ばれるかは不明なので
 
 async function main() {
   //
   // It be effective immediately after saving
   //
+  const tasks = []
   const now = new Date()
-  // NOTE: 秒は "*"、1分に一回呼ばれることは保証されていて何秒のタイミングで呼ばれるかは不明なので
 
   if (cronMatch(HOURLY3, now)) {
-    mensaCheck()
+    tasks.push(mensaCheck)
   }
 
   // const weekly = '0 0 6 * * SAT *' // not work
@@ -24,8 +25,12 @@ async function main() {
   // }
 
   if (cronMatch(HOURLY, now)) {
-    morseClockSignal()
+    tasks.push(morseClockSignal)
   }
+  if (tasks.length === 0) return
+  tasks.forEach((task) => {
+    task()
+  })
 }
 
 main()
