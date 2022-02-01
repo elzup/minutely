@@ -1,10 +1,10 @@
+import { range } from '@elzup/kit'
 import { hourSignal } from '../morseClockSignal'
 
 test('hourSignal', () => {
   expect(hourSignal(1, 1)).toMatchInlineSnapshot(`"a 1"`)
   expect(hourSignal(2, 1)).toMatchInlineSnapshot(`"b 1"`)
-  expect([...Array(24).keys()].map((h) => hourSignal(1, h)))
-    .toMatchInlineSnapshot(`
+  expect(range(24).map((h) => hourSignal(1, h))).toMatchInlineSnapshot(`
     Array [
       "a 0",
       "a 1",

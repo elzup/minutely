@@ -1,4 +1,5 @@
 import { execSync } from 'child_process'
+import { charAlphabets } from '@elzup/kit/lib/constants'
 import * as morse from 'morse-converter'
 
 const cargoBin = `$HOME/.cargo/bin`
@@ -30,10 +31,9 @@ const HOUR_CHAR_LIST = [
   `yz 21`,
   `22`, `23`,
 ]
-const ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
 
 export const hourSignal = (d: number, h: number) =>
-  `${ALPHABET[(d - 1) % 26]} ${HOUR_CHAR_LIST[h]}`
+  `${charAlphabets[(d - 1) % 26]} ${HOUR_CHAR_LIST[h]}`
 
 const hourSignalNow = (d = new Date()) => hourSignal(d.getDate(), d.getHours())
 
