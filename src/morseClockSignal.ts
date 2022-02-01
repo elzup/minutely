@@ -13,10 +13,10 @@ const morse2soundCmd = (sig: string) =>
 // 1 => 'b',
 // 2 => 'c',
 // 23=> 'xy'
-const _HOUR_CHAR_LIST0 = ['za', ...`bcdefghijklmnopqrstuvw`.split(''), 'xy']
+const _HOUR_CHAR_LIST01 = ['za', ...`bcdefghijklmnopqrstuvw`.split(''), 'xy']
 
 // prettier-ignore
-const HOUR_CHAR_LIST = [
+const _HOUR_CHAR_LIST02 = [
   `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`,
   `ab 9`,
   `cd 10`,
@@ -35,7 +35,7 @@ const HOUR_CHAR_LIST = [
 ]
 
 export const hourSignal = (d: number, h: number) =>
-  `${charAlphabets[(d - 1) % 26]} ${HOUR_CHAR_LIST[h]}`
+  `${h.toString(12)} ${charAlphabets[(d - 1) % 26]}`
 
 const hourSignalNow = (d = new Date()) => hourSignal(d.getDate(), d.getHours())
 
