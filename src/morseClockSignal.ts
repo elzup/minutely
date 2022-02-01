@@ -40,10 +40,11 @@ export const hourSignal = (d: number, h: number) =>
 const hourSignalNow = (d = new Date()) => hourSignal(d.getDate(), d.getHours())
 
 export function morseClockSignal() {
-  const morseSig = morse.encode(hourSignalNow())
+  const sig = hourSignalNow()
+  const morseSig = morse.encode(sig)
   const cmd = morse2soundCmd(morseSig)
 
-  notifier.notify({ title: 'morse sig', message: `<[ ${morseSig} ]>` })
+  notifier.notify({ title: 'morse sig', message: `${sig} <[ ${morseSig} ]>` })
 
   execSync(cmd)
 }
