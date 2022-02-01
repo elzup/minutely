@@ -1,3 +1,4 @@
+import { googleSearchUrl } from '@elzup/kit/lib/url'
 import { chromium, devices } from 'playwright'
 
 async function scrape(q: string) {
