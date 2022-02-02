@@ -2,6 +2,17 @@ import { googleSearchUrl } from '@elzup/kit/lib/url'
 import axios from 'axios'
 import { chromium, devices } from 'playwright'
 import cheerio = require('cheerio')
+import incstr from 'incstr'
+import { appendSearchCounts, Db } from './db'
+
+export async function memSearch(db: Db) {
+  const inc = incstr(db.get('searchCount.inc').value())
+
+  const res = await googleSearchCountPlaywright(inc)
+
+  db.set('searchCount.inc', inc).write()
+  appendSearchCounts(`${inc}\t${res}\n`)
+}
 
 export async function googleSearchCount(q: string) {
   const url = googleSearchUrl(q)
@@ -9,7 +20,14 @@ export async function googleSearchCount(q: string) {
 
   const $ = cheerio.load(res.data)
 
-  return $('#result-stats').text()
+  return $('body').text()
+}
+
+const parseCountNum = (str: string) => {
+  const m = str.match(/([\d,]+) 件/)
+
+  if (!m) return -1
+  return Number(m[1].replaceAll(',', '')) || -1
 }
 
 export async function googleSearchCountPlaywright(q: string) {
@@ -22,6 +40,7 @@ export async function googleSearchCountPlaywright(q: string) {
 
   const text = await res.textContent()
 
-  console.log(text)
   browser.close()
+  if (!text) return -1
+  return parseCountNum(text)
 }

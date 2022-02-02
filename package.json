@@ -1,7 +1,6 @@
 {
   "name": "scheduled-scripts",
   "version": "1.0.0",
-  "main": "src/index.js",
   "license": "MIT",
   "scripts": {
     "test": "jest"
@@ -10,6 +9,7 @@
     "@swc/core": "^1.2.135",
     "@swc/jest": "^0.2.17",
     "@types/jest": "^27.4.0",
+    "@types/lowdb": "^1.0.11",
     "@types/node": "^16.9.0",
     "@types/node-notifier": "^8.0.2",
     "eslint": "^8.8.0",
@@ -25,6 +25,8 @@
     "axios": "^0.21.4",
     "cheerio": "^1.0.0-rc.10",
     "cron-schedule": "^3.0.4",
+    "incstr": "^1.2.3",
+    "lowdb": "^1.0.0",
     "morse-converter": "^1.2.0",
     "node-notifier": "^10.0.0"
   }

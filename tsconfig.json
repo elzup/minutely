@@ -2,12 +2,16 @@
   "compilerOptions": {
     "target": "ES2019",
     "module": "commonjs",
+    "lib": ["es2021"],
     "sourceMap": true,
     "outDir": "./dist",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "incstr": ["./src/@types/incstr.d.ts"]
+    }
   },
   "include": ["src/**/*"]
 }
