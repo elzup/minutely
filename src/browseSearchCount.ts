@@ -6,7 +6,10 @@ import incstr from 'incstr'
 import { appendSearchCounts, Db } from './db'
 
 export async function memSearch(db: Db) {
-  const inc = incstr(db.get('searchCount.inc').value())
+  const inc = incstr(
+    db.get('searchCount.inc').value(),
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  )
 
   const res = await googleSearchCountPlaywright(inc)
 
