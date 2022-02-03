@@ -3,18 +3,29 @@ import axios from 'axios'
 import { chromium, devices } from 'playwright'
 import cheerio = require('cheerio')
 import incstr from 'incstr'
+import { range } from '@elzup/kit'
 import { appendSearchCounts, Db } from './db'
 
+const oneTime = 5
+const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+
 export async function memSearch(db: Db) {
-  const inc = incstr(
-    db.get('searchCount.inc').value(),
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-  )
+  const next = incstr.idGenerator({
+    lastId: db.get('searchCount.inc').value(),
+    alphabet,
+  })
 
-  const res = await googleSearchCountPlaywright(inc)
+  const ids = range(oneTime).map(() => next())
+  const res = await googleSearchCountPlaywrightMulti(ids)
 
-  db.set('searchCount.inc', inc).write()
-  appendSearchCounts(`${inc}\t${res}\n`)
+  const lastInc = ids.pop() || '---'
+
+  db.set('searchCount.inc', lastInc).write()
+  const text = Object.entries(res)
+    .map(([id, count]) => `${id}\t${count}\n`)
+    .join('')
+
+  appendSearchCounts(text)
 }
 
 export async function googleSearchCount(q: string) {
@@ -34,16 +45,29 @@ const parseCountNum = (str: string) => {
 }
 
 export async function googleSearchCountPlaywright(q: string) {
+  return await googleSearchCountPlaywrightMulti([q])
+}
+
+const sleep = (msec: number) =>
+  new Promise((resolve) => setTimeout(resolve, msec))
+
+export async function googleSearchCountPlaywrightMulti(qs: string[]) {
   const browser = await chromium.launch({ headless: true })
   const page = await browser.newPage({ ...devices['Desktop Chrome'] })
-  const url = googleSearchUrl(q)
 
-  await page.goto(url)
-  const res = page.locator('#result-stats')
+  const map: Record<string, number> = {}
 
-  const text = await res.textContent()
+  for (const q of qs) {
+    const sl = sleep(100)
 
+    await page.goto(googleSearchUrl(q))
+    const res = page.locator('#result-stats')
+    const text = await res.textContent()
+
+    map[q] = text ? parseCountNum(text) : -1
+    await sl
+  }
   browser.close()
-  if (!text) return -1
-  return parseCountNum(text)
+
+  return map
 }
