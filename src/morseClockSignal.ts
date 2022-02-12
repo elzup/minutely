@@ -1,7 +1,6 @@
-import { execSync } from 'child_process'
+import { spawnSync } from 'child_process'
 import { charAlphabets } from '@elzup/kit/lib/constants'
 import * as morse from 'morse-converter'
-
 import notifier from 'node-notifier'
 
 const cargoBin = `$HOME/.cargo/bin`
@@ -42,9 +41,8 @@ const hourSignalNow = (d = new Date()) => hourSignal(d.getDate(), d.getHours())
 export function morseClockSignal() {
   const sig = hourSignalNow()
   const morseSig = morse.encode(sig)
-  const cmd = morse2soundCmd(morseSig)
 
   notifier.notify({ title: 'morse sig', message: `${sig} <[ ${morseSig} ]>` })
 
-  execSync(cmd)
+  spawnSync(morse2soundCmd(morseSig), { shell: true })
 }
