@@ -6,7 +6,7 @@ import incstr from 'incstr'
 import { range } from '@elzup/kit'
 import { appendSearchCounts, Db } from './db'
 
-const oneTime = 5
+const oneTime = 1
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
 export async function memSearch(db: Db) {
