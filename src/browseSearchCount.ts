@@ -8,12 +8,13 @@ import { appendSearchCounts, Db } from './db'
 
 const oneTime = 1
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+const END_ID = '999'
 
 export async function memSearch(db: Db) {
-  const next = incstr.idGenerator({
-    lastId: db.get('searchCount.inc').value(),
-    alphabet,
-  })
+  const lastId = db.get('searchCount.inc').value()
+  const next = incstr.idGenerator({ lastId, alphabet })
+
+  if (lastId === END_ID) return
 
   const ids = range(oneTime).map(() => next())
   const res = await googleSearchCountPlaywrightMulti(ids)
