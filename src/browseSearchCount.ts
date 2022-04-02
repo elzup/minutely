@@ -1,9 +1,9 @@
+import { range } from '@elzup/kit'
 import { googleSearchUrl } from '@elzup/kit/lib/url'
 import axios from 'axios'
+import incstr from 'incstr'
 import { chromium, devices } from 'playwright'
 import cheerio = require('cheerio')
-import incstr from 'incstr'
-import { range } from '@elzup/kit'
 import { appendSearchCounts, Db } from './db'
 
 const oneTime = 1
@@ -17,6 +17,7 @@ export async function memSearch(db: Db) {
   if (lastId === END_ID) return
 
   const ids = range(oneTime).map(() => next())
+
   const res = await googleSearchCountPlaywrightMulti(ids)
 
   const lastInc = ids.pop() || '---'
@@ -28,9 +29,10 @@ export async function memSearch(db: Db) {
 
   appendSearchCounts(text)
 }
+const prequery = (q: string) => q + ' -あいうえおかきくけこ' // avoid content result bar
 
 export async function googleSearchCount(q: string) {
-  const url = googleSearchUrl(q)
+  const url = googleSearchUrl(prequery(q))
   const res = await axios.get(url)
 
   const $ = cheerio.load(res.data)
@@ -61,7 +63,7 @@ export async function googleSearchCountPlaywrightMulti(qs: string[]) {
   for (const q of qs) {
     const sl = sleep(100)
 
-    await page.goto(googleSearchUrl(q))
+    await page.goto(googleSearchUrl(prequery(q)))
     const res = page.locator('#result-stats')
     const text = await res.textContent()
 
