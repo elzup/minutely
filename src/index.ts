@@ -15,14 +15,16 @@ const MINUTELY = '* * * * * *'
 const _HOURLYDAY = `* 0 ${dayTime} * * *`
 // NOTE: 秒は "*"、1分に一回呼ばれることは保証されていて何秒のタイミングで呼ばれるかは不明なので
 
-type Task = {
+type PureTask = {
   name: string
   cronExp: string
   func: () => void
 }
-type DbTask = Omit<Task, 'func'> & {
+type DbTask = Omit<PureTask, 'func'> & {
   func: (db: Db) => Promise<void>
+  db: true
 }
+type Task = PureTask | DbTask
 
 const tasks: Task[] = [
   { name: 'mensaCheck', cronExp: HOURLY3, func: mensaCheck },
@@ -32,20 +34,20 @@ const tasks: Task[] = [
   //   name: 'minutely works',
   //   func: () => slackNotice('weekley', 'minutely works', ':+1:'),
   // },
+  { name: 'memSearch', cronExp: MINUTELY, func: memSearch, db: true },
 ]
-const dbTasks: DbTask[] = [
-  { name: 'memSearch', cronExp: MINUTELY, func: memSearch },
-]
+
+const isDbTask = (task: Task): task is DbTask => task.hasOwnProperty('db')
+const isPureTask = (task: Task): task is PureTask => !isDbTask(task)
 
 async function main() {
   const now = new Date()
 
-  tasks
-    .filter((task) => cronMatch(task.cronExp, now))
-    .forEach((task) => {
-      task.func()
-    })
-  const runDbTasks = dbTasks.filter((task) => cronMatch(task.cronExp, now))
+  const runTasks = tasks.filter((task) => cronMatch(task.cronExp, now))
+  const runPureTasks = runTasks.filter(isPureTask)
+  const runDbTasks = runTasks.filter(isDbTask)
+
+  runPureTasks.forEach((task) => task.func())
 
   if (runDbTasks.length === 0) return
 
