@@ -1,4 +1,3 @@
-import { memSearch } from './browseSearchCount'
 import { cronMatch } from './cronMatch'
 import { Db, loadDb } from './db'
 import { mensaCheck } from './mensaCheck'
@@ -11,7 +10,7 @@ import { morseClockSignal } from './morseClockSignal'
 const dayTime = `8-21`
 const HOURLY = '* 0 * * * *'
 const HOURLY3 = '* 0 */3 * * *'
-const MINUTELY = '* * * * * *'
+const _MINUTELY = '* * * * * *'
 const _HOURLYDAY = `* 0 ${dayTime} * * *`
 // NOTE: 秒は "*"、1分に一回呼ばれることは保証されていて何秒のタイミングで呼ばれるかは不明なので
 
