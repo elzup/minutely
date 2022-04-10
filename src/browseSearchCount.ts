@@ -4,6 +4,7 @@ import axios from 'axios'
 import incstr from 'incstr'
 import { chromium, devices } from 'playwright'
 import cheerio = require('cheerio')
+import notifier from 'node-notifier'
 import { appendSearchCounts, Db } from './db'
 
 const oneTime = 1
@@ -14,7 +15,10 @@ export async function memSearch(db: Db) {
   const lastId = db.get('searchCount.inc').value()
   const next = incstr.idGenerator({ lastId, alphabet })
 
-  if (lastId === END_ID) return
+  if (lastId === END_ID) {
+    notifier.notify({ title: 'memSearch finished', message: `finished` })
+    return
+  }
 
   const ids = range(oneTime).map(() => next())
 

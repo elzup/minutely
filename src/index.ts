@@ -34,7 +34,8 @@ const tasks: Task[] = [
   //   name: 'minutely works',
   //   func: () => slackNotice('weekley', 'minutely works', ':+1:'),
   // },
-  { name: 'memSearch', cronExp: MINUTELY, func: memSearch, db: true },
+  // NOTE: memSearch completed
+  // { name: 'memSearch', cronExp: MINUTELY, func: memSearch, db: true },
 ]
 
 const isDbTask = (task: Task): task is DbTask => task.hasOwnProperty('db')
