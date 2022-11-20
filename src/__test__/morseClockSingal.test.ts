@@ -1,5 +1,5 @@
 import { range } from '@elzup/kit'
-import { hourSignal } from '../morseClockSignal'
+import { hourSignal } from '../module/morseClockSignal'
 
 test('hourSignal', () => {
   expect(hourSignal(1, 1)).toMatchInlineSnapshot(`"1 a"`)

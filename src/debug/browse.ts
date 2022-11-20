@@ -2,7 +2,7 @@ import {
   googleSearchCount,
   googleSearchCountPlaywright,
   googleSearchCountPlaywrightMulti,
-} from '../browseSearchCount'
+} from '../module/browseSearchCount'
 
 async function main() {
   let start = Date.now()

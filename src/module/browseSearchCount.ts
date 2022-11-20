@@ -5,7 +5,7 @@ import incstr from 'incstr'
 import { chromium, devices } from 'playwright'
 import cheerio = require('cheerio')
 import notifier from 'node-notifier'
-import { appendSearchCounts, Db } from './db'
+import { appendSearchCounts, Db } from '../db'
 
 const oneTime = 1
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'

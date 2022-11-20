@@ -1,5 +1,5 @@
 import { spawnSync } from 'child_process'
-import { slackNotice } from './slackCli'
+import { slackNotice } from '../utils/slackCli'
 
 const cargoBin = `$HOME/.cargo/bin`
 const htmlq = `${cargoBin}/htmlq`

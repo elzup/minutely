@@ -1,7 +1,7 @@
 import { cronMatch } from './cronMatch'
 import { Db, loadDb } from './db'
-import { mensaCheck } from './mensaCheck'
-import { morseClockSignal } from './morseClockSignal'
+import { mensaCheck } from './module/mensaCheck'
+import { morseClockSignal } from './module/morseClockSignal'
 
 //
 // It be effective immediately after saving

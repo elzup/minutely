@@ -1,3 +1,3 @@
-import { morseClockSignal } from '../morseClockSignal'
+import { morseClockSignal } from '../module/morseClockSignal'
 
 morseClockSignal()
