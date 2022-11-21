@@ -2,6 +2,7 @@ import { cronMatch } from './cronMatch'
 import { Db, loadDb } from './db'
 import { mensaCheck } from './module/mensaCheck'
 import { morseClockSignal } from './module/morseClockSignal'
+import { openNews } from './module/news'
 
 //
 // It be effective immediately after saving
@@ -10,6 +11,7 @@ import { morseClockSignal } from './module/morseClockSignal'
 const dayTime = `8-21`
 const HOURLY = '* 0 * * * *'
 const HOURLY3 = '* 0 */3 * * *'
+const DAILY_MORNING = '0 0 7 * * *'
 const _MINUTELY = '* * * * * *'
 const _HOURLYDAY = `* 0 ${dayTime} * * *`
 // NOTE: 秒は "*"、1分に一回呼ばれることは保証されていて何秒のタイミングで呼ばれるかは不明なので
@@ -28,6 +30,7 @@ type Task = PureTask | DbTask
 const tasks: Task[] = [
   { name: 'mensaCheck', cronExp: HOURLY3, func: mensaCheck },
   { name: 'clockSignal', cronExp: HOURLY, func: morseClockSignal },
+  { name: 'morningNews', cronExp: DAILY_MORNING, func: openNews },
   // {
   //   cronExp: WEEKLY,
   //   name: 'minutely works',
