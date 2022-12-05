@@ -32,7 +32,7 @@ const tasks: Task[] = [
   { name: 'mensaCheck', cronExp: HOURLY3, func: mensaCheck },
   { name: 'clockSignal', cronExp: HOURLY, func: morseClockSignal },
   { name: 'morningNews', cronExp: DAILY_MORNING, func: openNews },
-  { name: 'report', cronExp: DAILY_MORNING, func: report, db: true },
+  { name: 'report', cronExp: _MINUTELY, func: report, db: true },
   // {
   //   cronExp: WEEKLY,
   //   name: 'minutely works',
