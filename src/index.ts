@@ -1,3 +1,4 @@
+import { report } from './module/report'
 import { cronMatch } from './cronMatch'
 import { Db, loadDb } from './db'
 import { mensaCheck } from './module/mensaCheck'
@@ -31,6 +32,7 @@ const tasks: Task[] = [
   { name: 'mensaCheck', cronExp: HOURLY3, func: mensaCheck },
   { name: 'clockSignal', cronExp: HOURLY, func: morseClockSignal },
   { name: 'morningNews', cronExp: DAILY_MORNING, func: openNews },
+  { name: 'report', cronExp: DAILY_MORNING, func: report, db: true },
   // {
   //   cronExp: WEEKLY,
   //   name: 'minutely works',
