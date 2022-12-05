@@ -35,15 +35,20 @@ const _HOUR_CHAR_LIST02 = [
 
 export const hourSignal = (d: number, h: number) => `${charAlphabets[h]}`
 
-const hourSignalNow = (d = new Date()) => hourSignal(d.getDate(), d.getHours())
+const hourSignalNow = (d: Date) => hourSignal(d.getDate(), d.getHours())
+
+export const buildSigs = (d = new Date()) => {
+  const sig = hourSignalNow(d)
+  const morseSig = morse.encode(sig)
+  const message = `${sig} <[ ${morseSig} ]>`
+
+  return { sig, morseSig, message }
+}
 
 export function morseClockSignal() {
-  const sig = hourSignalNow()
-  const morseSig = morse.encode(sig)
+  const { morseSig, message } = buildSigs()
 
-  console.log(morse2soundCmd(morseSig))
-
-  notifier.notify({ title: 'morse sig', message: `${sig} <[ ${morseSig} ]>` })
+  notifier.notify({ title: 'morse sig', message })
 
   spawnSync(morse2soundCmd(morseSig), { shell: true })
 }
