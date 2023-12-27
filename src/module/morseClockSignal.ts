@@ -8,6 +8,8 @@ const morse2sound = `${cargoBin}/morse2sound`
 const morse2soundCmd = (sig: string) =>
   `${morse2sound} --dot-duration 50 --frequency 200 "${sig}"`
 
+const enableMorseSig = false
+
 // 0 => 'za',
 // 1 => 'b',
 // 2 => 'c',
@@ -50,5 +52,7 @@ export function morseClockSignal() {
 
   notifier.notify({ title: 'morse sig', message })
 
-  spawnSync(morse2soundCmd(morseSig), { shell: true })
+  if (enableMorseSig) {
+    spawnSync(morse2soundCmd(morseSig), { shell: true })
+  }
 }
