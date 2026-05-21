@@ -1,5 +1,4 @@
 import { spawnSync } from 'child_process'
-import { charAlphabets } from '@elzup/kit/lib/constants'
 import * as morse from 'morse-converter'
 import notifier from 'node-notifier'
 
@@ -10,39 +9,37 @@ const morse2soundCmd = (sig: string) =>
 
 const enableMorseSig = false
 
-// 0 => 'za',
-// 1 => 'b',
-// 2 => 'c',
-// 23=> 'xy'
-const _HOUR_CHAR_LIST01 = ['za', ...`bcdefghijklmnopqrstuvw`.split(''), 'xy']
+const BYTE_RADIX = 16
+const BYTE_BIT_LENGTH = 8
+const BYTE_MAX_EXCLUSIVE = 0x100
 
-// prettier-ignore
-const _HOUR_CHAR_LIST02 = [
-  `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8`,
-  `ab 9`,
-  `cd 10`,
-  `ef 11`,
-  `gh 12`,
-  `ij 13`,
-  `kl 14`,
-  `mn 15`,
-  `op 16`,
-  `qr 17`,
-  `st 18`,
-  `uv 19`,
-  `wx 20`,
-  `yz 21`,
-  `22`, `23`,
-]
+const randomByte = () => Math.floor(Math.random() * BYTE_MAX_EXCLUSIVE)
 
-export const hourSignal = (d: number, h: number) => `${charAlphabets[h]}`
+const assertByte = (value: number) => {
+  if (!Number.isInteger(value) || value < 0 || value >= BYTE_MAX_EXCLUSIVE) {
+    throw new Error(`byte must be an integer from 0 to 255: ${value}`)
+  }
+}
 
-const hourSignalNow = (d: Date) => hourSignal(d.getDate(), d.getHours())
+export const toHexByte = (value: number) => {
+  assertByte(value)
+  return value.toString(BYTE_RADIX).toUpperCase().padStart(2, '0')
+}
 
-export const buildSigs = (d = new Date()) => {
-  const sig = hourSignalNow(d)
+export const toBitByte = (value: number) => {
+  assertByte(value)
+  return value.toString(2).padStart(BYTE_BIT_LENGTH, '0')
+}
+
+export const buildAlertText = (
+  hexValue = randomByte(),
+  bitValue = randomByte()
+) => `${toHexByte(hexValue)} ${toBitByte(bitValue)}`
+
+export const buildSigs = (hexValue?: number, bitValue?: number) => {
+  const sig = buildAlertText(hexValue, bitValue)
   const morseSig = morse.encode(sig)
-  const message = `${sig} <[ ${morseSig} ]>`
+  const message = sig
 
   return { sig, morseSig, message }
 }
