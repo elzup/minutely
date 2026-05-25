@@ -3,20 +3,22 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "oxlint",
+    "format": "biome format --write .",
+    "format:check": "biome format ."
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.4.15",
     "@swc/core": "^1.2.135",
     "@swc/jest": "^0.2.17",
     "@types/jest": "^27.4.0",
     "@types/lowdb": "^1.0.11",
     "@types/node": "^16.9.0",
     "@types/node-notifier": "^8.0.2",
-    "eslint": "^8.8.0",
-    "eslint-config-nzap": "^5.0.0",
     "jest": "^27.4.7",
+    "oxlint": "^1.66.0",
     "playwright": "^1.18.1",
-    "prettier": "^2.5.1",
     "ts-node": "^10.2.1",
     "typescript": "^4.4.2"
   },
