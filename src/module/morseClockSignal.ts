@@ -1,4 +1,5 @@
 import { spawnSync } from 'child_process'
+import { charAlphabets } from '@elzup/kit/lib/constants'
 import * as morse from 'morse-converter'
 import notifier from 'node-notifier'
 
@@ -15,33 +16,32 @@ const BYTE_MAX_EXCLUSIVE = 0x100
 
 const randomByte = () => Math.floor(Math.random() * BYTE_MAX_EXCLUSIVE)
 
-const assertByte = (value: number) => {
-  if (!Number.isInteger(value) || value < 0 || value >= BYTE_MAX_EXCLUSIVE) {
-    throw new Error(`byte must be an integer from 0 to 255: ${value}`)
-  }
-}
+export const toHexByte = (value: number) =>
+  value.toString(BYTE_RADIX).toUpperCase().padStart(2, '0')
 
-export const toHexByte = (value: number) => {
-  assertByte(value)
-  return value.toString(BYTE_RADIX).toUpperCase().padStart(2, '0')
-}
+export const toBitByte = (value: number) =>
+  value.toString(2).padStart(BYTE_BIT_LENGTH, '0')
 
-export const toBitByte = (value: number) => {
-  assertByte(value)
-  return value.toString(2).padStart(BYTE_BIT_LENGTH, '0')
-}
+export const hourSignal = (d: number, h: number) => `${charAlphabets[h]}`
 
-export const buildAlertText = (
-  hexValue = randomByte(),
-  bitValue = randomByte()
-) => `${toHexByte(hexValue)} ${toBitByte(bitValue)}`
+const hourSignalNow = (d: Date) => hourSignal(d.getDate(), d.getHours())
 
-export const buildSigs = (hexValue?: number, bitValue?: number) => {
-  const sig = buildAlertText(hexValue, bitValue)
+const toClock = (d: Date) =>
+  `${`${d.getHours()}`.padStart(2, '0')}:${`${d.getMinutes()}`.padStart(2, '0')}`
+
+export const buildSigs = (
+  d = new Date(),
+  binValue = randomByte(),
+  hexValue = randomByte()
+) => {
+  const sig = hourSignalNow(d)
   const morseSig = morse.encode(sig)
-  const message = sig
+  const clock = toClock(d)
+  const bin = toBitByte(binValue)
+  const hex = toHexByte(hexValue)
+  const message = `${clock} ${sig} <[ ${morseSig} ]>\n${bin} ${hex}`
 
-  return { sig, morseSig, message }
+  return { sig, morseSig, clock, bin, hex, message }
 }
 
 export function morseClockSignal() {
