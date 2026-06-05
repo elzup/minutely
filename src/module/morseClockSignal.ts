@@ -47,7 +47,9 @@ export const buildSigs = (
 export function morseClockSignal() {
   const { morseSig, message } = buildSigs()
 
-  notifier.notify({ title: 'morse sig', message })
+  // sender に通知許可済みの既存アプリの bundle id を指定すると、
+  // 通知センターに保持されやすくなる (terminal-notifier 単体だと消えることがある)
+  notifier.notify({ title: 'morse sig', message, sender: 'com.apple.Terminal' })
 
   if (enableMorseSig) {
     spawnSync(morse2soundCmd(morseSig), { shell: true })
