@@ -1,17 +1,15 @@
 {
   "compilerOptions": {
-    "target": "ES2019",
-    "module": "commonjs",
-    "lib": ["es2021"],
-    "sourceMap": true,
-    "outDir": "./dist",
+    "target": "ES2023",
+    "module": "nodenext",
+    "lib": ["es2023"],
     "strict": true,
-    "esModuleInterop": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "paths": {
-      "incstr": ["./src/@types/incstr.d.ts"]
-    }
+    "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*"]
+  "include": ["launchd/**/*", "jobs/**/*"]
 }

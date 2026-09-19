@@ -15,6 +15,6 @@
     }
   },
   "files": {
-    "includes": ["src/**/*.ts", "*.json", "*.js"]
+    "includes": ["launchd/**/*.ts", "jobs/**/*.ts", "*.json"]
   }
 }
