@@ -11,6 +11,7 @@ nr launchd ls                 # 台帳 + 現在の状態
 nr launchd health             # 問題のあるジョブだけ
 nr launchd render <label>     # managed ジョブの plist を出力
 nr launchd install <label>    # ~/Library/LaunchAgents に配置して登録し直す
+nr launchd uninstall <label>  # launchd から外して plist を消す
 nr test && nr typecheck
 ```
 
@@ -24,4 +25,5 @@ nr test && nr typecheck
 
 マシン状態の計測は [forge](https://github.com/elzup/forge) の役割で、ここでは扱わない。
 
-`jobs/` は managed ジョブの本体 (`morseClock.ts` = 毎時の morse 時報、`morningNews.ts` = 7:00 のニュース)。
+`jobs/` は managed ジョブの本体 (`morningNews.ts` = 7:00 のニュース)。
+`morseClock.ts` (毎時の morse 時報) は dabod へ移植予定のため台帳から外して停止中。移植が済んだら消す。
