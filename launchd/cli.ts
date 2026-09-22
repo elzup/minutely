@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process'
-import { mkdirSync, writeFileSync } from 'node:fs'
+import { mkdirSync, rmSync, writeFileSync } from 'node:fs'
 import { userInfo } from 'node:os'
 import { parseArgs } from 'node:util'
 import {
@@ -18,7 +18,8 @@ const USAGE = `usage: node launchd/cli.ts <command>
   ls                 台帳と現在の状態を一覧する
   health [--notify]  問題のあるジョブだけ出す (--notify: 変化時に Slack)
   render <label>     managed ジョブの plist を標準出力へ
-  install <label>    plist を ~/Library/LaunchAgents に置いて launchd に登録し直す`
+  install <label>    plist を ~/Library/LaunchAgents に置いて launchd に登録し直す
+  uninstall <label>  launchd から外して plist を消す (台帳からは手で消す)`
 
 const findManaged = (jobs: Job[], label: string | undefined): ManagedJob => {
   const job = jobs.find((candidate) => candidate.label === label)
@@ -61,23 +62,37 @@ const health = async (jobs: Job[], shouldNotify: boolean) => {
   console.info(hasNotified ? 'notified' : 'unchanged, not notified')
 }
 
+const domain = () => `gui/${userInfo().uid}`
+
+const bootout = (label: string) => {
+  try {
+    execFileSync('/bin/launchctl', ['bootout', `${domain()}/${label}`], {
+      stdio: 'ignore',
+    })
+  } catch {
+    // 未登録なら bootout は失敗する。初回 install / 二重 uninstall では正常な経路で、
+    // install では直後の bootstrap が成否を決める
+  }
+}
+
 const install = (job: ManagedJob) => {
-  const domain = `gui/${userInfo().uid}`
   const path = plistPathOf(job.label)
 
   mkdirSync(LOG_DIR, { recursive: true })
   writeFileSync(path, renderPlist(job))
-  try {
-    execFileSync('/bin/launchctl', ['bootout', `${domain}/${job.label}`], {
-      stdio: 'ignore',
-    })
-  } catch {
-    // 未登録なら bootout は失敗する。初回 install では正常な経路で、直後の bootstrap が成否を決める
-  }
-  execFileSync('/bin/launchctl', ['bootstrap', domain, path], {
+  bootout(job.label)
+  execFileSync('/bin/launchctl', ['bootstrap', domain(), path], {
     stdio: 'inherit',
   })
   console.info(`installed ${path}`)
+}
+
+const uninstall = (job: ManagedJob) => {
+  const path = plistPathOf(job.label)
+
+  bootout(job.label)
+  rmSync(path, { force: true })
+  console.info(`uninstalled ${path}`)
 }
 
 const main = async () => {
@@ -93,6 +108,7 @@ const main = async () => {
   if (command === 'render')
     return process.stdout.write(renderPlist(findManaged(jobs, label)))
   if (command === 'install') return install(findManaged(jobs, label))
+  if (command === 'uninstall') return uninstall(findManaged(jobs, label))
   console.error(USAGE)
   process.exitCode = 1
 }
