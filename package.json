@@ -10,12 +10,14 @@
     "typecheck": "tsc",
     "lint": "oxlint",
     "format": "biome format --write .",
-    "format:check": "biome format ."
+    "format:check": "biome format .",
+    "prepare": "lefthook install"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.15",
     "@types/node": "^22.0.0",
     "@types/node-notifier": "^8.0.2",
+    "lefthook": "^2.1.14",
     "oxlint": "^1.66.0",
     "typescript": "^5.9.0"
   },
