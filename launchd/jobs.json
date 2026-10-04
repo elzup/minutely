@@ -17,6 +17,41 @@
       "workdir": "~/.ghq/github.com/elzup/minutely",
       "schedule": { "kind": "calendar", "hour": 7, "minute": 0 }
     },
+    {
+      "label": "com.elzup.dotfiles-sync",
+      "purpose": "~/dotfiles の zsh 履歴バックアップと commit / push (6:00)。本体は dotfiles 側",
+      "managed": true,
+      "program": ["/bin/sh", "~/dotfiles/sync-dotfiles.sh"],
+      "schedule": { "kind": "calendar", "hour": 6, "minute": 0 }
+    },
+    {
+      "label": "com.elzup.brewfile-backup",
+      "purpose": "~/Brewfile の brew bundle dump と commit / push (6:00)。本体は Brewfile 側",
+      "managed": true,
+      "program": ["/bin/sh", "~/Brewfile/backup-brew.sh"],
+      "schedule": { "kind": "calendar", "hour": 6, "minute": 0 }
+    },
+    {
+      "label": "com.elzup.999.sync",
+      "purpose": "999 のスプレッドシート日次 sync (9:00)。本体は 999 側",
+      "managed": true,
+      "program": ["/bin/bash", "~/.ghq/github.com/elzup/999/scripts/sync-daily.sh"],
+      "schedule": { "kind": "calendar", "hour": 9, "minute": 0 }
+    },
+    {
+      "label": "com.elzup.vscode-theme",
+      "purpose": "曜日ごとに VSCode テーマを切り替える (0:00)。本体は kit-sh 側",
+      "managed": true,
+      "program": ["/bin/bash", "~/.ghq/github.com/elzup/kit-sh/vscode/change_vscode_theme.sh"],
+      "schedule": { "kind": "calendar", "hour": 0, "minute": 0 }
+    },
+    {
+      "label": "com.elzup.wordlaps-copy-db",
+      "purpose": "四半期末に Chrome / Opera の History を wordlaps/db へ退避 (1,4,7,10 月 1 日 0:00)。本体は wordlaps 側",
+      "managed": true,
+      "program": ["/bin/bash", "~/.ghq/github.com/elzup/wordlaps/scripts/copy_db_quarterly.sh"],
+      "schedule": { "kind": "calendar", "months": [1, 4, 7, 10], "day": 1, "hour": 0, "minute": 0 }
+    },
     { "label": "com.elzup.forge", "purpose": "マシン状態の計測 (60 秒)", "managed": false, "scheduler": "launchd", "owner": "forge" },
     { "label": "com.elzup.forge-publish", "purpose": "viewer データ差し替え (5 分)", "managed": false, "scheduler": "launchd", "owner": "forge" },
     { "label": "com.elzup.forge-rotate", "purpose": "ログのローテート (4:17)", "managed": false, "scheduler": "launchd", "owner": "forge" },
@@ -24,15 +59,10 @@
     { "label": "com.elzup.quota.web", "purpose": "quota の dev サーバー (常駐)", "managed": false, "scheduler": "launchd", "owner": "quota" },
     { "label": "com.elzup.daily-report-ai", "purpose": "リポジトリ活動の AI 日報 (0:00)", "managed": false, "scheduler": "launchd", "owner": "daily-report-ai" },
     { "label": "com.elzup.daily-check", "purpose": "Mensa 募集チェック (10:00)", "managed": false, "scheduler": "launchd", "owner": "daily-check" },
-    { "label": "com.elzup.999.sync", "purpose": "999 の日次 sync (9:00)", "managed": false, "scheduler": "launchd", "owner": "999" },
     { "label": "com.elzup.bayalhost", "purpose": "static preview の Caddy (常駐)", "managed": false, "scheduler": "launchd", "owner": "bayalhost" },
     { "label": "com.elzup.bayalhost-admin", "purpose": "bayalhost の管理サーバー (常駐)", "managed": false, "scheduler": "launchd", "owner": "bayalhost" },
-    { "label": "sync.dotfiles", "purpose": "dotfiles の同期 (6:00)", "managed": false, "scheduler": "launchd", "owner": "~/dotfiles" },
-    { "label": "dump.brewfile", "purpose": "Brewfile のバックアップ (6:00)", "managed": false, "scheduler": "launchd", "owner": "~/Brewfile" },
-    { "label": "night-openpaper", "purpose": "夜に論文を開く (21:00)。スクリプト消失", "managed": false, "scheduler": "launchd", "owner": "~/Brewfile", "isDead": true },
     { "label": "setenv", "purpose": "ログイン時に GUI アプリ向けの環境変数を設定", "managed": false, "scheduler": "launchd", "owner": "~/Brewfile" },
     { "label": "PocketFarmVirtual", "purpose": "pocketfarm-virtual の debug ビルドをログイン時に起動", "managed": false, "scheduler": "launchd", "owner": "planckunits/pocketfarm-virtual" },
-    { "label": "com.github.facebook.watchman", "purpose": "watchman が自動生成した常駐 (ファイル監視)", "managed": false, "scheduler": "launchd", "owner": "watchman" },
-    { "label": "cron:vscode-theme", "purpose": "VSCode テーマ切替 (crontab 0:00)", "managed": false, "scheduler": "cron", "owner": "kit-sh" }
+    { "label": "com.github.facebook.watchman", "purpose": "watchman が自動生成した常駐 (ファイル監視)", "managed": false, "scheduler": "launchd", "owner": "watchman" }
   ]
 }
