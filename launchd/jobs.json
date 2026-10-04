@@ -10,9 +10,19 @@
       "schedule": { "kind": "calendar", "hour": 10, "minute": 30 }
     },
     {
+      "label": "com.elzup.morse-clock",
+      "purpose": "毎時 0 分に時刻の morse 時報を通知。dabod へ移植予定のため停止中",
+      "managed": true,
+      "isDisabled": true,
+      "program": ["~/.n/bin/node", "jobs/morseClock.ts"],
+      "workdir": "~/.ghq/github.com/elzup/minutely",
+      "schedule": { "kind": "calendar", "minute": 0 }
+    },
+    {
       "label": "com.elzup.morning-news",
       "purpose": "7:00 に trending / JS ニュースをブラウザで開く",
       "managed": true,
+      "isDisabled": true,
       "program": ["~/.n/bin/node", "jobs/morningNews.ts"],
       "workdir": "~/.ghq/github.com/elzup/minutely",
       "schedule": { "kind": "calendar", "hour": 7, "minute": 0 }

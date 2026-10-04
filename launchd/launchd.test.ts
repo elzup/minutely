@@ -22,6 +22,15 @@ const external = (label: string, extra: Partial<Job> = {}): Job =>
     ...extra,
   }) as Job
 
+const disabled = (label: string): Job => ({
+  label,
+  purpose: '',
+  managed: true,
+  isDisabled: true,
+  program: ['/bin/echo'],
+  schedule: { kind: 'calendar', minute: 0 },
+})
+
 test('parseLaunchctlList reads pid / exit / label', () => {
   assert.deepEqual(parseLaunchctlList(LIST_OUTPUT), [
     { label: 'com.elzup.quota.web', pid: 6906, lastExit: 1 },
@@ -56,6 +65,23 @@ test('checkHealth classifies each job', () => {
     ]
   )
   assert.equal(problemsOf(rows).length, 5)
+})
+
+test('checkHealth treats a disabled job as a problem only while loaded', () => {
+  const rows = checkHealth(
+    [disabled('com.elzup.stopped'), disabled('com.elzup.forge')],
+    parseLaunchctlList(LIST_OUTPUT),
+    []
+  )
+
+  assert.deepEqual(
+    rows.map((row) => row.status),
+    ['disabled', 'still-loaded']
+  )
+  assert.deepEqual(
+    problemsOf(rows).map((row) => row.label),
+    ['com.elzup.forge']
+  )
 })
 
 test('renderPlist wraps program with env file and escapes xml', () => {

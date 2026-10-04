@@ -19,7 +19,7 @@ const USAGE = `usage: node launchd/cli.ts <command>
   health [--notify]  問題のあるジョブだけ出す (--notify: 変化時に Slack)
   render <label>     managed ジョブの plist を標準出力へ
   install <label>    plist を ~/Library/LaunchAgents に置いて launchd に登録し直す
-  uninstall <label>  launchd から外して plist を消す (台帳からは手で消す)`
+  uninstall <label>  launchd から外して plist を消す (止めたままにするなら台帳で isDisabled: true)`
 
 const findManaged = (jobs: Job[], label: string | undefined): ManagedJob => {
   const job = jobs.find((candidate) => candidate.label === label)
@@ -76,6 +76,8 @@ const bootout = (label: string) => {
 }
 
 const install = (job: ManagedJob) => {
+  if (job.isDisabled === true)
+    throw new Error(`${job.label} is disabled (台帳の isDisabled を外す)`)
   const path = plistPathOf(job.label)
 
   mkdirSync(LOG_DIR, { recursive: true })

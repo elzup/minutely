@@ -23,6 +23,8 @@ export type ManagedJob = JobBase & {
   workdir?: string
   /** 実行前に source する env ファイル (launchd は .envrc を読まないため) */
   envFile?: string
+  /** 止めたジョブ。定義は残すので、外して install すれば戻せる。launchd に載っていたら still-loaded */
+  isDisabled?: boolean
 }
 
 /** plist / crontab の正本が他リポジトリにあるジョブ。台帳には載せて監視だけする */
@@ -52,6 +54,8 @@ export type HealthStatus =
   | 'restarting'
   | 'not-loaded'
   | 'dead'
+  | 'disabled'
+  | 'still-loaded'
   | 'unregistered'
   | 'unchecked'
 

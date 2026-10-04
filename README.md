@@ -17,13 +17,15 @@ nr test && nr typecheck
 
 - 台帳は `launchd/jobs.json`。
   - `managed: true` — plist をここから生成する。ログは `~/Library/Logs/elzup/<label>.log`。
+  - `isDisabled: true` — managed ジョブを定義ごと残して止める。`uninstall` してから付ける。戻すときは外して `install`。
   - `managed: false` — plist の正本は各リポジトリ (forge, quota, daily-report-ai …)。載せて監視だけする。
 - `com.elzup.launchd-health` が毎日 10:30 に `health --notify` を実行し、問題の集合が**変化したときだけ** Slack (`SLACK_URL`, `.envrc`) に通知する。
 - 状態の意味: `failing` = 最後の終了コードが非 0 / `restarting` = KeepAlive で再起動中だが前回は失敗 /
-  `not-loaded` = 台帳にあるが launchd に無い / `dead` = 撤去待ち / `unregistered` = 自作 plist なのに台帳に無い。
+  `not-loaded` = 台帳にあるが launchd に無い / `dead` = 撤去待ち / `disabled` = 止めてある (問題ではない) / `still-loaded` = disabled なのに launchd に残っている / `unregistered` = 自作 plist なのに台帳に無い。
 - `node launchd/cli.ts` は node の type stripping で直接動く (依存ゼロ、型検査は実行経路に置かない)。
 
 マシン状態の計測は [forge](https://github.com/elzup/forge) の役割で、ここでは扱わない。
 
-`jobs/` は managed ジョブの本体 (`morningNews.ts` = 7:00 のニュース)。
-`morseClock.ts` (毎時の morse 時報) は dabod へ移植予定のため台帳から外して停止中。移植が済んだら消す。
+`jobs/` は managed ジョブの本体。現在はどちらも台帳で `isDisabled: true` にして停止中。
+`morningNews.ts` (7:00 に GitHub trending / JS ニュースをブラウザで開く) は不要になったため停止。
+`morseClock.ts` (毎時の morse 時報) は dabod へ移植予定のため停止。移植が済んだら消す。

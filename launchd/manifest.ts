@@ -29,6 +29,8 @@ const validateJob = (raw: unknown, index: number): Job => {
     throw new Error(`${label}: managed job needs program[]`)
   if (managed && !isRecord(raw.schedule))
     throw new Error(`${label}: managed job needs schedule`)
+  if (raw.isDisabled !== undefined && typeof raw.isDisabled !== 'boolean')
+    throw new Error(`${label}: isDisabled must be boolean`)
   if (!managed && raw.scheduler !== 'launchd' && raw.scheduler !== 'cron')
     throw new Error(`${label}: scheduler must be launchd or cron`)
 

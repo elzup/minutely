@@ -55,6 +55,11 @@ const rowOf = (job: Job, entry: LaunchctlEntry | undefined): HealthRow => {
   if (!job.managed && job.scheduler === 'cron')
     return { ...base, status: 'unchecked' }
   if (!job.managed && job.isDead === true) return { ...base, status: 'dead' }
+  if (job.managed && job.isDisabled === true)
+    return {
+      ...base,
+      status: entry === undefined ? 'disabled' : 'still-loaded',
+    }
   if (entry === undefined) return { ...base, status: 'not-loaded' }
   if (entry.lastExit === 0) return { ...base, status: 'ok' }
   // KeepAlive のジョブは落ちても再起動されるので、pid があれば「今は動いている」
@@ -83,7 +88,7 @@ export const checkHealth = (
   ]
 }
 
-const HEALTHY = new Set<HealthRow['status']>(['ok', 'unchecked'])
+const HEALTHY = new Set<HealthRow['status']>(['ok', 'unchecked', 'disabled'])
 
 export const problemsOf = (rows: HealthRow[]) =>
   rows.filter((row) => !HEALTHY.has(row.status))
