@@ -3,7 +3,8 @@ pre-commit:
   commands:
     format:
       glob: '*.{ts,json}'
-      run: yarn biome format --write {staged_files}
+      # launchd/jobs.json は biome の includes 外。それだけを commit すると「対象 0 件」で落ちるのを防ぐ
+      run: yarn biome format --write --no-errors-on-unmatched {staged_files}
       stage_fixed: true
     lint:
       glob: '*.ts'
