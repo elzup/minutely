@@ -31,16 +31,28 @@ const scheduleXml = (schedule: Schedule): string[] => {
   if (schedule.kind === 'interval')
     return [key('StartInterval'), int(schedule.seconds)]
 
+  const day = schedule.day === undefined ? [] : [key('Day'), int(schedule.day)]
   const hour =
     schedule.hour === undefined ? [] : [key('Hour'), int(schedule.hour)]
-
-  return [
-    key('StartCalendarInterval'),
+  const dict = (month: number | undefined) => [
     '<dict>',
+    ...(month === undefined ? [] : [key('Month'), int(month)]),
+    ...day,
     ...hour,
     key('Minute'),
     int(schedule.minute),
     '</dict>',
+  ]
+
+  if (schedule.months === undefined)
+    return [key('StartCalendarInterval'), ...dict(undefined)]
+
+  // launchd の Month は整数 1 つしか取れないので、月ごとの dict を配列で並べる
+  return [
+    key('StartCalendarInterval'),
+    '<array>',
+    ...schedule.months.flatMap(dict),
+    '</array>',
   ]
 }
 

@@ -1,6 +1,14 @@
 export type Schedule =
   | { kind: 'interval'; seconds: number }
-  | { kind: 'calendar'; hour?: number; minute: number }
+  | {
+      kind: 'calendar'
+      /** 1-12。省略すると毎月 */
+      months?: number[]
+      /** 1-31。省略すると毎日 */
+      day?: number
+      hour?: number
+      minute: number
+    }
 
 type JobBase = {
   label: string

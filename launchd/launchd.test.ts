@@ -77,3 +77,26 @@ test('renderPlist wraps program with env file and escapes xml', () => {
   assert.match(xml, /a&amp;b/)
   assert.match(xml, /<key>Hour<\/key>\n\s+<integer>10<\/integer>/)
 })
+
+test('renderPlist emits one calendar dict per month', () => {
+  const job: ManagedJob = {
+    label: 'com.elzup.test',
+    purpose: '',
+    managed: true,
+    program: ['/bin/echo'],
+    schedule: { kind: 'calendar', months: [1, 4], day: 1, hour: 0, minute: 0 },
+  }
+  const xml = renderPlist(job)
+
+  assert.match(xml, /<key>StartCalendarInterval<\/key>\n\s+<array>/)
+  assert.deepEqual(
+    [...xml.matchAll(/<key>Month<\/key>\n\s+<integer>(\d+)<\/integer>/g)].map(
+      (match) => match[1]
+    ),
+    ['1', '4']
+  )
+  assert.equal(
+    xml.match(/<key>Day<\/key>\n\s+<integer>1<\/integer>/g)?.length,
+    2
+  )
+})
